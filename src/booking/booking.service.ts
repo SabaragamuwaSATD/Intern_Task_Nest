@@ -39,4 +39,19 @@ export class BookingService {
   getAllBooking() {
     return [...this.bookings];
   }
+
+  // function for getting booking by id
+  getBookingById(bookingId: string) {
+    const booking = this.findBooking(bookingId)[0];
+    return { ...booking };
+  }
+
+  private findBooking(id: string): [Booking, number] {
+    const bookingIndex = this.bookings.findIndex((b) => b.id === id);
+    const booking = this.bookings[bookingIndex];
+    if (!booking) {
+      throw new Error('Could not find booking.');
+    }
+    return [booking, bookingIndex];
+  }
 }
