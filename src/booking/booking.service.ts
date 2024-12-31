@@ -46,6 +46,51 @@ export class BookingService {
     return { ...booking };
   }
 
+  // function for updating booking
+  updateBooking(
+    bookingId: string,
+    cCode?: string,
+    contact?: string,
+    email?: string,
+    passengers?: {
+      title?: string;
+      fName?: string;
+      lName?: string;
+      dob?: Date;
+      country?: string;
+    }[],
+  ) {
+    const [booking, index] = this.findBooking(bookingId);
+
+    const updatedContact =
+      cCode && contact ? `${cCode}${contact}` : booking.contact;
+    const updatedEmail = email ?? booking.email;
+    const updatedPassengers = passengers
+      ? passengers.map((p, i) => {
+          const existingPassenger = booking.passengers[i] || {
+            fullName: '',
+            dob: new Date(),
+            country: '',
+          };
+          const title = p.title ?? existingPassenger.fullName.split(' ')[0];
+          const fName = p.fName ?? existingPassenger.fullName.split(' ')[1];
+          const lName = p.lName ?? existingPassenger.fullName.split(' ')[2];
+          return {
+            fullName: `${title} ${fName} ${lName}`,
+            dob: p.dob ?? existingPassenger.dob,
+            country: p.country ?? existingPassenger.country,
+          };
+        })
+      : booking.passengers;
+
+    this.bookings[index] = {
+      ...booking,
+      contact: updatedContact,
+      email: updatedEmail,
+      passengers: updatedPassengers,
+    };
+  }
+
   private findBooking(id: string): [Booking, number] {
     const bookingIndex = this.bookings.findIndex((b) => b.id === id);
     const booking = this.bookings[bookingIndex];
