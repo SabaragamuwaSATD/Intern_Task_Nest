@@ -6,6 +6,7 @@ export class BookingService {
   // array for the saving data of booking
   private bookings: Booking[] = [];
 
+  // function for adding booking
   addBooking(
     cCode: string,
     contact: string,
@@ -32,5 +33,10 @@ export class BookingService {
     );
     this.bookings.push(newBooking);
     return newBooking.id;
+  }
+
+  // function for getting all booking
+  getAllBooking() {
+    return [...this.bookings];
   }
 }
