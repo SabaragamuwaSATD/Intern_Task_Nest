@@ -11,6 +11,11 @@ export class BookingController {
     return this.bookingService.createBooking(createBookingDto);
   }
 
+  @Get()
+  findAll() {
+    return this.bookingService.findAllBookings();
+  }
+
   // @Post('/add')
   // addBooking(
   //   @Body('cCode') cCode: string,

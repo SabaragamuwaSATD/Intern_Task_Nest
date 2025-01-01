@@ -18,6 +18,10 @@ export class BookingService {
     await this.bookingRepository.save(booking);
   }
 
+  async findAllBookings() {
+    return await this.bookingRepository.find();
+  }
+
   // array for the saving data of booking....................................................
   // private bookings: Booking[] = [];
 
