@@ -1,58 +1,64 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { BookingService } from './booking.service';
+import { CreateBookingDto } from './dto/create.booking.dto';
 
-@Controller('/bookings')
+@Controller('bookings')
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
-  @Post('/add')
-  addBooking(
-    @Body('cCode') cCode: string,
-    @Body('contact') contact: string,
-    @Body('email') email: string,
-    @Body('passengers')
-    passengers: {
-      title: string;
-      fName: string;
-      lName: string;
-      dob: Date;
-      country: string;
-    }[],
-  ) {
-    return this.bookingService.addBooking(cCode, contact, email, passengers);
+  @Post()
+  create(@Body() createBookingDto: CreateBookingDto) {
+    return this.bookingService.createBooking(createBookingDto);
   }
 
-  @Get('/all')
-  getAllBooking() {
-    return this.bookingService.getAllBooking();
-  }
+  // @Post('/add')
+  // addBooking(
+  //   @Body('cCode') cCode: string,
+  //   @Body('contact') contact: string,
+  //   @Body('email') email: string,
+  //   @Body('passengers')
+  //   passengers: {
+  //     title: string;
+  //     fName: string;
+  //     lName: string;
+  //     dob: Date;
+  //     country: string;
+  //   }[],
+  // ) {
+  //   return this.bookingService.addBooking(cCode, contact, email, passengers);
+  // }
 
-  @Get('/:id')
-  getBookingById(@Param('id') bookingId: string) {
-    return this.bookingService.getBookingById(bookingId);
-  }
+  // @Get('/all')
+  // getAllBooking() {
+  //   return this.bookingService.getAllBooking();
+  // }
 
-  @Patch('/:id')
-  updateBooking(
-    @Param('id') bookingId: string,
-    @Body('cCode') cCode: string,
-    @Body('contact') contact: string,
-    @Body('email') email: string,
-    @Body('passengers')
-    passengers: {
-      title: string;
-      fName: string;
-      lName: string;
-      dob: Date;
-      country: string;
-    }[],
-  ) {
-    return this.bookingService.updateBooking(
-      bookingId,
-      cCode,
-      contact,
-      email,
-      passengers,
-    );
-  }
+  // @Get('/:id')
+  // getBookingById(@Param('id') bookingId: string) {
+  //   return this.bookingService.getBookingById(bookingId);
+  // }
+
+  // @Patch('/:id')
+  // updateBooking(
+  //   @Param('id') bookingId: string,
+  //   @Body('cCode') cCode: string,
+  //   @Body('contact') contact: string,
+  //   @Body('email') email: string,
+  //   @Body('passengers')
+  //   passengers: {
+  //     title: string;
+  //     fName: string;
+  //     lName: string;
+  //     dob: Date;
+  //     country: string;
+  //   }[],
+  // ) {
+  //   return this.bookingService.updateBooking(
+  //     bookingId,
+  //     cCode,
+  //     contact,
+  //     email,
+  //     passengers,
+  //   );
+  // }
 }
