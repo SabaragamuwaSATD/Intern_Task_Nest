@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateBookingDto } from './dto/create.booking.dto';
 import { Booking } from './entities/booking.entity';
+import { UpdateBookingDto } from './dto/update.booking.dto';
+import { merge } from 'lodash';
 
 @Injectable()
 export class BookingService {
@@ -20,6 +22,20 @@ export class BookingService {
 
   async findAllBookings() {
     return await this.bookingRepository.find();
+  }
+
+  async findOne(id: number) {
+    return await this.bookingRepository.findOne({ where: { id } });
+  }
+
+  async updateBooking(id: number, updateBookingDto: UpdateBookingDto) {
+    const booking = await this.findOne(id);
+    if (!booking) {
+      throw new NotFoundException();
+    }
+    merge(booking, updateBookingDto);
+
+    return await this.bookingRepository.save(booking);
   }
 
   // array for the saving data of booking....................................................
