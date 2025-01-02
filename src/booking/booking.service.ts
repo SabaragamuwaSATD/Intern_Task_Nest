@@ -35,7 +35,7 @@ export class BookingService {
   async updateBooking(id: number, updateBookingDto: UpdateBookingDto) {
     const booking = await this.findOne(id);
     if (!booking) {
-      throw new NotFoundException();
+      throw new NotFoundException(`Booking with id ${id} not found`);
     }
 
     if (updateBookingDto.passengers) {
@@ -45,6 +45,10 @@ export class BookingService {
         );
         if (passenger) {
           Object.assign(passenger, updatedPassenger);
+        } else {
+          throw new NotFoundException(
+            `Passenger with id ${updatedPassenger.id} not found`,
+          );
         }
       });
     }
