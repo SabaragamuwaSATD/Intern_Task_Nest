@@ -44,6 +44,14 @@ export class BookingController {
     return this.bookingService.deleteBooking(id);
   }
 
+  @Delete(':bookingId/passenger/:passengerId')
+  removePassenger(
+    @Param('bookingId') bookingId: number,
+    @Param('passengerId') passengerId: number,
+  ) {
+    return this.bookingService.deletePassenger(bookingId, passengerId);
+  }
+
   // @Post('/add')
   // addBooking(
   //   @Body('cCode') cCode: string,

@@ -40,15 +40,23 @@ export class BookingService {
 
     if (updateBookingDto.passengers) {
       updateBookingDto.passengers.forEach((updatedPassenger) => {
-        const passenger = booking.passengers.find(
-          (p) => p.id === updatedPassenger.id,
-        );
-        if (passenger) {
-          Object.assign(passenger, updatedPassenger);
-        } else {
-          throw new NotFoundException(
-            `Passenger with id ${updatedPassenger.id} not found`,
+        if (updatedPassenger.id) {
+          const passenger = booking.passengers.find(
+            (p) => p.id === updatedPassenger.id,
           );
+          if (passenger) {
+            Object.assign(passenger, updatedPassenger);
+          } else {
+            throw new NotFoundException(
+              `Passenger with id ${updatedPassenger.id} not found`,
+            );
+          }
+        } else {
+          // Assign a new id to the new passenger
+          const newPassengerId = booking.passengers.length
+            ? Math.max(...booking.passengers.map((p) => p.id)) + 1
+            : 1;
+          booking.passengers.push({ ...updatedPassenger, id: newPassengerId });
         }
       });
     }
@@ -69,6 +77,28 @@ export class BookingService {
 
     await this.bookingRepository.remove(booking);
     return { message: `Booking with id ${id} deleted successfully` };
+  }
+
+  //delete specific passenger from booking...............................................
+  async deletePassenger(bookingId: number, passengerId: number) {
+    const booking = await this.findOne(bookingId);
+    if (!booking) {
+      throw new NotFoundException(`Booking with id ${bookingId} not found`);
+    }
+
+    const passengerIndex = booking.passengers.findIndex(
+      (p) => p.id === Number(passengerId),
+    );
+
+    if (passengerIndex === -1) {
+      throw new NotFoundException(`Passenger with id ${passengerId} not found`);
+    }
+
+    booking.passengers.splice(passengerIndex, 1);
+
+    await this.bookingRepository.save(booking);
+
+    return { message: `Passenger with id ${passengerId} deleted successfully` };
   }
 
   // array for the saving data of booking....................................................
