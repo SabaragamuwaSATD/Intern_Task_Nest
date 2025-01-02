@@ -60,6 +60,17 @@ export class BookingService {
     return await this.bookingRepository.save(booking);
   }
 
+  // deleteBooking...............................................................
+  async deleteBooking(id: number) {
+    const booking = await this.findOne(id);
+    if (!booking) {
+      throw new NotFoundException(`Booking with id ${id} not found`);
+    }
+
+    await this.bookingRepository.remove(booking);
+    return { message: `Booking with id ${id} deleted successfully` };
+  }
+
   // array for the saving data of booking....................................................
   // private bookings: Booking[] = [];
 
