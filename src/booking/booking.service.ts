@@ -17,6 +17,10 @@ export class BookingService {
   async createBooking(createBookingDto: CreateBookingDto) {
     const booking = this.bookingRepository.create(createBookingDto);
 
+    booking.passengers.forEach((passeger, index) => {
+      passeger.id = index + 1;
+    });
+
     await this.bookingRepository.save(booking);
   }
 
@@ -33,7 +37,21 @@ export class BookingService {
     if (!booking) {
       throw new NotFoundException();
     }
-    merge(booking, updateBookingDto);
+
+    if (updateBookingDto.passengers) {
+      updateBookingDto.passengers.forEach((updatedPassenger) => {
+        const passenger = booking.passengers.find(
+          (p) => p.id === updatedPassenger.id,
+        );
+        if (passenger) {
+          Object.assign(passenger, updatedPassenger);
+        }
+      });
+    }
+
+    // Merge other fields from updateBookingDto into booking
+    const { passengers, ...otherUpdates } = updateBookingDto;
+    merge(booking, otherUpdates);
 
     return await this.bookingRepository.save(booking);
   }

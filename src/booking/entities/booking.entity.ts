@@ -16,6 +16,7 @@ export class Booking {
 
   @Column({ type: 'json', nullable: false })
   passengers: {
+    id: number;
     title: string;
     fName: string;
     lName: string;

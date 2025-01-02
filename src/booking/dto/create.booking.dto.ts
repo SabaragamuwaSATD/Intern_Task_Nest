@@ -3,6 +3,7 @@ export class CreateBookingDto {
   contact: string;
   email: string;
   passengers: {
+    id?: number;
     title: string;
     fName: string;
     lName: string;
